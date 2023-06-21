@@ -43,7 +43,7 @@ function Panel() {
           aria-labelledby="home-tab"
           tabindex="0"
         >
-          <Productos/>
+          <h1>Aqui irá una tabla</h1>
         </div>
         <div
           class="tab-pane fade"

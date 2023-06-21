@@ -5,6 +5,7 @@ function TableProductos() {
     { id: 1, nombre: "coca cola 3 litros", precio: 50.0, cantidad: 20 },
     { id: 2, nombre: "Fanta 600 ml", precio: 15.0, cantidad: 30 },
     { id: 3, nombre: "Pepsi 1.5 L", precio: 30.0, cantidad: 10 },
+    { id: 3, nombre: "Chiva cola 600 ml", precio: 25.0, cantidad: 12 },
   ];
 
   const [modal, setModal] = useState(false);
