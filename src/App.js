@@ -1,11 +1,15 @@
-
+import { BrowserRouter } from "react-router-dom";
 import Rutas from "./rutas/Rutas";
+import RutasCliente from "./rutas/RutasClient";
 
 function App() {
   return (
-  <div>
-    <Rutas/>
-  </div>
+    <BrowserRouter>
+      <div>
+        <Rutas />
+        <RutasCliente/>
+      </div>
+    </BrowserRouter>
   );
 }
 
