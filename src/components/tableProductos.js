@@ -1,12 +1,8 @@
 import React, { useState } from "react";
+import {refrescos} from "../bd/datos";
 
 function TableProductos() {
-  const productos = [
-    { id: 1, nombre: "coca cola 3 litros", precio: 50.0, cantidad: 20 },
-    { id: 2, nombre: "Fanta 600 ml", precio: 15.0, cantidad: 30 },
-    { id: 3, nombre: "Pepsi 1.5 L", precio: 30.0, cantidad: 10 },
-    { id: 3, nombre: "Chiva cola 600 ml", precio: 25.0, cantidad: 12 },
-  ];
+
 
   const [modal, setModal] = useState(false);
 
@@ -31,7 +27,7 @@ function TableProductos() {
     alert("Los datos se han modificado con éxito");
   };
 
-  const listaProducto = productos.map((producto) => {
+  const listaProducto = refrescos.map((producto) => {
     return (
       <tbody>
         <tr>

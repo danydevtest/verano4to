@@ -21,13 +21,13 @@ function Menu() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
-                Home
+              <Link className="nav-link active" aria-current="page" to="/admin/home">
+                Productos
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#">
-                Link
+                Catálogos
               </Link>
             </li>
             <li className="nav-item dropdown">
@@ -38,17 +38,17 @@ function Menu() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Dropdown
+                Reportes
               </Link>
               <ul className="dropdown-menu">
                 <li>
                   <Link className="dropdown-item" to="#">
-                    Action
+                    Ventas
                   </Link>
                 </li>
                 <li>
                   <Link className="dropdown-item" to="#">
-                    Another action
+                   Productos
                   </Link>
                 </li>
                 <li>
@@ -56,7 +56,7 @@ function Menu() {
                 </li>
                 <li>
                   <Link className="dropdown-item" to="#">
-                    Something else here
+                    Clientes
                   </Link>
                 </li>
               </ul>

@@ -1,6 +1,6 @@
 import React from 'react';
-import Busqueda from "../components/busqueda";
-import Panel from '../components/Panel';
+import Busqueda from "../../components/busqueda";
+import Panel from '../../components/Panel';
 
 function Home() {
   return (

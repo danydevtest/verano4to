@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AdminLayout from "../Layout/adminLayout/AdminLayout";
-import Home from "../paginas/Home";
+import HomeAdmin from "../paginas/admin/Home";
+import Home from "../paginas/client/Home";
 //import piePagina from "../components/piepagina";
 
 function Rutas() {
@@ -9,7 +10,8 @@ function Rutas() {
     <BrowserRouter>
       <AdminLayout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/admin/home" element={<HomeAdmin />} />
+          <Route path="/" element={<Home/>}/>
         </Routes>
       </AdminLayout>
     </BrowserRouter>
