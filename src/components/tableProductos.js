@@ -1,33 +1,56 @@
-import React, { useState } from "react";
-import {refrescos} from "../bd/datos";
+import React, { useState, useEffect } from "react";
+//import { refrescos } from "../bd/datos";
+import Axios from "../services/Axios";
 
 function TableProductos() {
-
-
-  const [modal, setModal] = useState(false);
-
-  const modalAbrirCerrar = () => {
-    const myModal = document.getElementById("myModal");
-    const myInput = document.getElementById("myInput");
-
-    myModal.addEventListener("shown.bs.modal", () => {
-      myInput.focus();
-    });
+  const datos = {
+    id:"",
+    nombre: "",
+    precio: "",
+    cantidad: "",
   };
 
-  const GuardarDatos=()=>{
-    alert('Los datos se han guardado correctamente')
+  const [saveDatos, setSaveDatos] = useState(datos);
+  const [almacenarDatos, setAlmacenarDatos]=useState([]);
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setSaveDatos({ ...saveDatos, [name]: value });
+  };
+
+  const GuardarDatos = async (e) => {
+    e.preventDefault();
+
+    await Axios.post("producto/guardarProducto", saveDatos).then(() => {
+      console.log("Registros guardados correctamente");
+    });
+    // console.log(guardarInformacion);
+    consultarInformacion();
+    setSaveDatos(datos);
+  };
+
+  const consultarInformacion=async()=>{
+    const consultar=await Axios.get("producto/consultarProducto");
+    setAlmacenarDatos(consultar.data);
+    //console.log(consultar.data);
   }
 
-  const Eliminar = () => {
-    alert("Los datos se han eliminado con éxito");
+  const Eliminar = async(id) => {
+    const eliminar= await Axios.delete(`producto/eliminarProducto/${id}`);
+    console.log("Los datos se eliminaron correctamente: "+eliminar);
+    consultarInformacion();
   };
 
-  const Editar = () => {
-    alert("Los datos se han modificado con éxito");
+  const buscarOne = async (id) => {
+    const editar=await Axios.patch(`producto/oneProducto/${id}`);
+    setSaveDatos(editar.data);
   };
 
-  const listaProducto = refrescos.map((producto) => {
+  useEffect(()=>{
+    consultarInformacion();
+  },[])
+
+  const listaProducto = almacenarDatos.map((producto) => {
     return (
       <tbody>
         <tr>
@@ -35,12 +58,12 @@ function TableProductos() {
           <td>{producto.nombre}</td>
           <td>$&nbsp;{producto.precio}.00</td>
           <td>
-            <button className="btn btn-info" onClick={Editar}>
+            <button className="btn btn-info" onClick={()=>buscarOne(producto._id)}>
               <i className="bi bi-pencil"></i>
             </button>
           </td>
           <td>
-            <button className="btn btn-danger" onClick={Eliminar}>
+            <button className="btn btn-danger" onClick={()=>Eliminar(producto._id)}>
               <i className="bi bi-trash"></i>
             </button>
           </td>
@@ -105,6 +128,9 @@ function TableProductos() {
                     class="form-control"
                     id="validationDefault01"
                     placeholder="Nombre del producto"
+                    name="nombre"
+                    value={saveDatos.nombre}
+                    onChange={onChange}
                     required
                   />
                 </div>
@@ -117,6 +143,9 @@ function TableProductos() {
                     class="form-control"
                     id="validationDefault02"
                     placeholder="Precio del producto"
+                    name="precio"
+                    value={saveDatos.precio}
+                    onChange={onChange}
                     required
                   />
                 </div>
@@ -129,6 +158,9 @@ function TableProductos() {
                     class="form-control"
                     id="validationDefault02"
                     placeholder="Cantidad de productos"
+                    name="cantidad"
+                    value={saveDatos.cantidad}
+                    onChange={onChange}
                     required
                   />
                 </div>
@@ -139,7 +171,6 @@ function TableProductos() {
                 </div>
               </form>
             </div>
-            
           </div>
         </div>
       </div>
