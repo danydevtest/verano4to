@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
 //import { refrescos } from "../bd/datos";
 import Axios from "../services/Axios";
+import { useNavigate } from "react-router-dom";
 
 function TableProductos() {
   const datos = {
-    id:"",
+    id: "",
     nombre: "",
     precio: "",
     cantidad: "",
+    descripcion: "",
+    image: "",
   };
 
+  const urlImages = "http://localhost:4000/images/";
+
   const [saveDatos, setSaveDatos] = useState(datos);
-  const [almacenarDatos, setAlmacenarDatos]=useState([]);
+  const [almacenarDatos, setAlmacenarDatos] = useState([]);
+
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -20,50 +27,72 @@ function TableProductos() {
 
   const GuardarDatos = async (e) => {
     e.preventDefault();
-
-    await Axios.post("producto/guardarProducto", saveDatos).then(() => {
+    const formu = document.getElementById("form-producto");
+    const formData = new FormData(formu);
+    //const data = Object.fromEntries(formData);
+    await Axios.post("producto/guardarProducto", formData).then(() => {
       console.log("Registros guardados correctamente");
     });
-    // console.log(guardarInformacion);
+    console.log();
     consultarInformacion();
     setSaveDatos(datos);
   };
 
-  const consultarInformacion=async()=>{
-    const consultar=await Axios.get("producto/consultarProducto");
+  const consultarInformacion = async () => {
+    const consultar = await Axios.get("producto/consultarProducto");
     setAlmacenarDatos(consultar.data);
     //console.log(consultar.data);
-  }
+  };
 
-  const Eliminar = async(id) => {
-    const eliminar= await Axios.delete(`producto/eliminarProducto/${id}`);
-    console.log("Los datos se eliminaron correctamente: "+eliminar);
+  const Eliminar = async (id) => {
+    const eliminar = await Axios.delete(`producto/eliminarProducto/${id}`);
+    console.log("Los datos se eliminaron correctamente: " + eliminar);
     consultarInformacion();
   };
 
   const buscarOne = async (id) => {
-    const editar=await Axios.patch(`producto/oneProducto/${id}`);
+    const editar = await Axios.patch(`producto/oneProducto/${id}`);
     setSaveDatos(editar.data);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     consultarInformacion();
-  },[])
+  }, []);
 
-  const listaProducto = almacenarDatos.map((producto) => {
+  const Editar = () => {
+    alert("Se va a editar");
+  };
+
+  const listaProducto = almacenarDatos.map((producto, index) => {
     return (
       <tbody>
-        <tr>
-          <th scope="row">{producto.id}</th>
+        <tr className="text-center">
+          <th scope="row">{index + 1}</th>
           <td>{producto.nombre}</td>
           <td>$&nbsp;{producto.precio}.00</td>
+          <td>{producto.cantidad}</td>
+          <td>{producto.descripcion}</td>
           <td>
-            <button className="btn btn-info" onClick={()=>buscarOne(producto._id)}>
+            <img
+              src={urlImages + producto.filename}
+              class="img-thumbnail"
+              alt="..."
+              style={{width:"100px"}}
+            />
+          </td>
+          <td>
+            <button
+              className="btn btn-info"
+              onClick={() => navigate(`/admin/editar/${producto._id}`)}
+            >
               <i className="bi bi-pencil"></i>
             </button>
           </td>
           <td>
-            <button className="btn btn-danger" onClick={()=>Eliminar(producto._id)}>
+            <button
+              className="btn btn-danger"
+              onClick={() => Eliminar(producto._id)}
+            >
               <i className="bi bi-trash"></i>
             </button>
           </td>
@@ -86,10 +115,13 @@ function TableProductos() {
       </div>
       <table class="table">
         <thead>
-          <tr>
+          <tr className="text-center">
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
             <th scope="col">Precio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Imagen</th>
             <th scope="col">Editar</th>
             <th scope="col">Eliminar</th>
           </tr>
@@ -118,7 +150,12 @@ function TableProductos() {
               ></button>
             </div>
             <div class="modal-body">
-              <form class="row g-3" onSubmit={GuardarDatos}>
+              <form
+                class="row g-3"
+                onSubmit={GuardarDatos}
+                id="form-producto"
+                encType="multipart/form-data"
+              >
                 <div class="col-md-12">
                   <label for="validationDefault01" class="form-label">
                     Nombre del producto
@@ -126,7 +163,7 @@ function TableProductos() {
                   <input
                     type="text"
                     class="form-control"
-                    id="validationDefault01"
+                    id="nombre"
                     placeholder="Nombre del producto"
                     name="nombre"
                     value={saveDatos.nombre}
@@ -141,7 +178,7 @@ function TableProductos() {
                   <input
                     type="text"
                     class="form-control"
-                    id="validationDefault02"
+                    id="precio"
                     placeholder="Precio del producto"
                     name="precio"
                     value={saveDatos.precio}
@@ -156,10 +193,37 @@ function TableProductos() {
                   <input
                     type="text"
                     class="form-control"
-                    id="validationDefault02"
+                    id="cantidad"
                     placeholder="Cantidad de productos"
                     name="cantidad"
                     value={saveDatos.cantidad}
+                    onChange={onChange}
+                    required
+                  />
+                </div>
+                <div class="col-md-12">
+                  <label for="validationDefault02" class="form-label">
+                    Descripcion
+                  </label>
+                  <textarea
+                    type="text"
+                    class="form-control"
+                    id="descripcion"
+                    placeholder="Redacta una descripción"
+                    name="descripcion"
+                    value={saveDatos.descripcion}
+                    onChange={onChange}
+                    required
+                  />
+                </div>
+                <div class="col-md-12">
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="image"
+                    placeholder="Ingresa la imagen"
+                    name="image"
+                    value={saveDatos.image}
                     onChange={onChange}
                     required
                   />
