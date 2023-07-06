@@ -17,6 +17,7 @@ function TableProductos() {
 
   const [saveDatos, setSaveDatos] = useState(datos);
   const [almacenarDatos, setAlmacenarDatos] = useState([]);
+  const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
 
@@ -50,17 +51,15 @@ function TableProductos() {
     consultarInformacion();
   };
 
-  const buscarOne = async (id) => {
-    const editar = await Axios.patch(`producto/oneProducto/${id}`);
-    setSaveDatos(editar.data);
-  };
 
   useEffect(() => {
     consultarInformacion();
   }, []);
 
-  const Editar = () => {
-    alert("Se va a editar");
+
+  const abrirModal = () => {
+
+    setShow({...!show});
   };
 
   const listaProducto = almacenarDatos.map((producto, index) => {
@@ -77,7 +76,7 @@ function TableProductos() {
               src={urlImages + producto.filename}
               class="img-thumbnail"
               alt="..."
-              style={{width:"100px"}}
+              style={{ width: "50px" }}
             />
           </td>
           <td>
@@ -145,8 +144,8 @@ function TableProductos() {
               <button
                 type="button"
                 class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
               ></button>
             </div>
             <div class="modal-body">

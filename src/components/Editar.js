@@ -1,29 +1,50 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "../services/Axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Editar() {
+  const variables = {
+    id:"",
+    nombre: "",
+    precio: "",
+    cantidad: "",
+    descripcion: "",
+    image: "",
+  };
 
-    const variables={
-        nombre:"",
-        precio:"",
-        cantidad:"",
-        descripcion:"",
-        image:""
-    }
+  const [saveDatos, setSaveDatos] = useState(variables);
 
-    const [saveDatos, setSaveDatos]=useState(variables);
+  const params = useParams();
+  const navigate=useNavigate();
 
-    const onChange=()=>{
-        alert("Cambio")
-    }
+  const buscarOne = async () => {
+    const editar = await Axios.get(`producto/oneProducto/${params.id}`);
+    setSaveDatos(editar.data);
+    console.log(editar.data);
+  };
 
-    const EditarForm=()=>{
-        alert("Edicion de formulario")
-    }
+  const onChange = (e) => {
+   const {name,value}=e.target;
+   setSaveDatos({...saveDatos,[name]:value})
+  };
 
+  const EditarForm = async () => {
+    const form=document.getElementById("formedit");
+    const formData=FormData(form);
+    Axios.patch("producto/updateProducto/" + params.id, formData)
+    .then(()=>{
+      console.log("Datos actualizados correctamente");
+    });
+    navigate("/admin/home")
+  };
+
+  useEffect(() => {
+    buscarOne(params.id);
+  }, [params.id]);
 
   return (
     <div>
-      <form class="row g-3" onSubmit={EditarForm}>
+      <form class="row g-3" onSubmit={EditarForm} id="formedit" encType="multipart/form-data">
         <div class="col-md-12">
           <label for="validationDefault01" class="form-label">
             Nombre del producto
@@ -83,6 +104,11 @@ function Editar() {
             onChange={onChange}
             required
           />
+        </div>
+        <div class="col-md-12">
+          <label for="validationDefault02" class="form-label">
+            {saveDatos.filename}
+          </label>
         </div>
         <div class="col-md-12">
           <input
