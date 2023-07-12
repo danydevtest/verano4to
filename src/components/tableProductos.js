@@ -42,7 +42,7 @@ function TableProductos() {
   const consultarInformacion = async () => {
     const consultar = await Axios.get("producto/consultarProducto");
     setAlmacenarDatos(consultar.data);
-    //console.log(consultar.data);
+    console.log(consultar);
   };
 
   const Eliminar = async (id) => {
@@ -73,7 +73,7 @@ function TableProductos() {
           <td>{producto.descripcion}</td>
           <td>
             <img
-              src={urlImages + producto.filename}
+              src={urlImages + producto.image.filename}
               class="img-thumbnail"
               alt="..."
               style={{ width: "50px" }}

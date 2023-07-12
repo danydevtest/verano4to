@@ -9,7 +9,10 @@ function Editar() {
     precio: "",
     cantidad: "",
     descripcion: "",
+    imagda:"",
     image: "",
+    filename:"",
+    path:""
   };
 
   const [saveDatos, setSaveDatos] = useState(variables);
@@ -106,18 +109,18 @@ function Editar() {
           />
         </div>
         <div class="col-md-12">
-          <label for="validationDefault02" class="form-label">
-            {saveDatos.filename}
-          </label>
+        <img src={'http://localhost:4000/images/'+saveDatos.image.filename} className="img-thumbnail" style={{width:100, height:100}} alt="..." />
+            
+         
         </div>
         <div class="col-md-12">
           <input
             type="file"
             class="form-control"
-            id="validationDefault02"
+            id="image"
             placeholder="Ingresa la imagen"
             name="image"
-            value={saveDatos.image}
+           value={saveDatos.path}
             onChange={onChange}
             required
           />
