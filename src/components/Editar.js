@@ -9,7 +9,6 @@ function Editar() {
     precio: "",
     cantidad: "",
     descripcion: "",
-    imagda:"",
     image: "",
     filename:"",
     path:""
@@ -120,7 +119,7 @@ function Editar() {
             id="image"
             placeholder="Ingresa la imagen"
             name="image"
-           value={saveDatos.path}
+           value={saveDatos.image}
             onChange={onChange}
             required
           />

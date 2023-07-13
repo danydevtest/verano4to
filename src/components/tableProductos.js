@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import Axios from "../services/Axios";
 import { useNavigate } from "react-router-dom";
 
+//import {toast} from "react-hot-toast";
+import {toast} from "react-toastify";
+
 function TableProductos() {
   const datos = {
     id: "",
@@ -18,7 +21,9 @@ function TableProductos() {
   const [saveDatos, setSaveDatos] = useState(datos);
   const [almacenarDatos, setAlmacenarDatos] = useState([]);
   const [show, setShow] = useState(false);
-
+  const [carga, setCarga]=useState(0);
+  const [loading, setLoading]=useState(false);
+ 
   const navigate = useNavigate();
 
   const onChange = (e) => {
@@ -28,11 +33,33 @@ function TableProductos() {
 
   const GuardarDatos = async (e) => {
     e.preventDefault();
+
+ setLoading(true);
     const formu = document.getElementById("form-producto");
     const formData = new FormData(formu);
     //const data = Object.fromEntries(formData);
-    await Axios.post("producto/guardarProducto", formData).then(() => {
-      console.log("Registros guardados correctamente");
+
+    await Axios.post("producto/guardarProducto", formData, {
+      headers:{
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress(progressEvent){
+        const {loaded,total}=progressEvent;
+        const porcentaje=parseInt((loaded*100)/total);
+        setCarga(porcentaje);
+       // console.log(porcentaje);
+      }
+    }).then(() => {
+      toast.success("Datos guardados correctamente!!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
     });
     console.log();
     consultarInformacion();
@@ -46,11 +73,27 @@ function TableProductos() {
   };
 
   const Eliminar = async (id) => {
-    const eliminar = await Axios.delete(`producto/eliminarProducto/${id}`);
-    console.log("Los datos se eliminaron correctamente: " + eliminar);
-    consultarInformacion();
-  };
 
+    if(window.confirm("¿Realmente estas seguro de eliminar el producto?")){
+      const eliminar = await Axios.delete(`producto/eliminarProducto/${id}`)
+      .then(()=>{
+        toast.error("Datos eliminados correctamente!!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          });
+      });
+      //console.log("Los datos se eliminaron correctamente: ");
+
+      
+    }   
+   consultarInformacion();
+  }
 
   useEffect(() => {
     consultarInformacion();
@@ -232,6 +275,17 @@ function TableProductos() {
                     Guardar
                   </button>
                 </div>
+{
+loading && (
+  <div className="col-12">
+                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+  <div class="progress-bar" style={{width:`${carga}%`}}></div>
+</div>
+                </div>
+)
+}
+                
+               
               </form>
             </div>
           </div>
